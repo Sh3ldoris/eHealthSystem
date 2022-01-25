@@ -17,7 +17,7 @@ public class PatientController : ControllerBase
     [HttpGet("{code}")]
     public IActionResult PatientByCode(string code)
     {
-        return Ok(Enumerable.Empty<Patient>());
+        return Ok();
     }
 
     [HttpPost("doctor")]
@@ -35,12 +35,12 @@ public class PatientController : ControllerBase
     [HttpPost]
     public IActionResult SavePatient(Patient patient)
     {
-        return Accepted(Enumerable.Empty<Patient>());
+        return Accepted();
     }
     
     [HttpPut]
     public IActionResult UpdatePatient(Patient patient)
     {
-        return Ok(Enumerable.Empty<Patient>());
+        return Accepted();
     }
 }
