@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace eMedicalRecordsApp.Model;
 
 public class Patient
 {
+    [Key]
     public string Code { get; set; }
     public string Insurance { get; set; }
     public Person Person { get; set; }

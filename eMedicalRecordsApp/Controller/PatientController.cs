@@ -1,4 +1,5 @@
 using eMedicalRecordsApp.Model;
+using eMedicalRecordsApp.Model.DBContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMedicalRecordsApp.Controller;

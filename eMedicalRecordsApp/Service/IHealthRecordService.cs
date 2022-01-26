@@ -2,8 +2,8 @@ using eMedicalRecordsApp.Model;
 
 namespace eMedicalRecordsApp.Service;
 
-public interface HealthRecordService
+public interface IHealthRecordService
 {
-    IEnumerable<HealthRecord> GetAllByPatientCode(string code);
+    IEnumerable<HealthRecord> GetAllByPatient(Patient patient);
     HealthRecord Save(HealthRecord record);
 }
