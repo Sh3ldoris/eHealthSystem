@@ -11,4 +11,8 @@ public class Anamnesis
     public string PhysiologicalFunctions { get; set; }
     public string GynecologicalHistory { get; set; }
     public string FamilyAnamnesis { get; set; }
+
+    public Anamnesis()
+    {
+    }
 }

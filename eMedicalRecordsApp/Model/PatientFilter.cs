@@ -6,4 +6,8 @@ public class PatientFilter
     public string BirthNumber { get; set; }
     public string Name { get; set; }
     public string LastName { get; set; }
+
+    public PatientFilter()
+    {
+    }
 }

@@ -11,7 +11,11 @@ public class UrgentInfo
     public string OrganDonation { get; set; }
     public long Height { get; set; }
     public long Weight { get; set; }
-    public DateTime Tetanus { get; set; }
+    public DateTime? Tetanus { get; set; }
     public string Transplantation { get; set; }
     public string BloodGroup { get; set; }
+
+    public UrgentInfo()
+    {
+    }
 }

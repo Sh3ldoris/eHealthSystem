@@ -16,17 +16,14 @@ public class SystemContext: DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        //TODO:Set path
+        optionsBuilder.UseLazyLoadingProxies();
         optionsBuilder.UseSqlite("Data Source=System.db;");
+        optionsBuilder.LogTo(Console.WriteLine);
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        var d = new Diagnosis() {Code = "A001", Name = "Zapal ucha"};
-        //var ad = new AssignedDiagnosis() {Id = 1, DiagnosisCode="A001", Localization = "Chrbat"};
-        modelBuilder.Entity<Diagnosis>().HasData(d);
-        //modelBuilder.Entity<AssignedDiagnosis>().HasData(ad);
         modelBuilder.ApplyConfiguration(new PatientConfig());
     }
     

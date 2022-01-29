@@ -1,13 +1,14 @@
 using eMedicalRecordsApp.Model;
+using eMedicalRecordsApp.Model.TransferObjects;
 
 namespace eMedicalRecordsApp.Service;
 
 public interface IPatientService
 {
-    IEnumerable<Patient> GetAllWithUrgentInfo();
-    Patient GetWithAnamesis(string patientCode);
+    IEnumerable<Patient> GetAll();
+    Patient Get(string patientCode);
     IEnumerable<Patient> GetAllWithUrgentInfoByDoctor(Doctor doctor);
     IEnumerable<Patient> GetAllWithUrgentInfoByFilter(PatientFilter filter);
-    Patient AddNew(Patient patient);
+    Patient AddNew(PatientDto patient);
     Patient UpdateExisting(Patient patient);
 }
