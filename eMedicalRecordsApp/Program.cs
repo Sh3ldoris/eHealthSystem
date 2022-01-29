@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IPatientService>(new PatientService());
+builder.Services.AddSingleton<IHealthRecordService>(new HealthRecordService());
+builder.Services.AddSingleton<IDiagnosisService>(new DiagnosisService());
 
 var app = builder.Build();
 

@@ -7,16 +7,16 @@ public record HealthRecordDto
     public virtual Doctor Doctor { get; set; }
     public string PatientCode { get; set; }
     public string Report { get; set; }
-    public virtual List<AssignedDiagnosis> diagnosis { get; set; }
+    public virtual List<AssignedDiagnosisDto> Diagnosis { get; set; }
 
-    public HealthRecordDto(DateTime date, string title, Doctor doctor, string patientCode, string report, List<AssignedDiagnosis> diagnosis)
+    public HealthRecordDto(DateTime date, string title, Doctor doctor, string patientCode, string report, List<AssignedDiagnosisDto> diagnosis)
     {
         Date = date;
         Title = title;
         Doctor = doctor;
         PatientCode = patientCode;
         Report = report;
-        this.diagnosis = diagnosis;
+        Diagnosis = diagnosis;
     }
 
     public HealthRecordDto()

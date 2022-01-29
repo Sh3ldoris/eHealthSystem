@@ -81,4 +81,15 @@ public class DbInitController : ControllerBase
         }
         return Ok();
     }
+
+    [HttpPost("diagnoses")]
+    public IActionResult InitDiagnosis(List<Diagnosis> diagnoses)
+    {
+        using (var ctx = new SystemContext())
+        {
+            ctx.Diagnosis.AddRange(diagnoses);
+            ctx.SaveChanges();
+        }
+        return Ok();
+    }
 }

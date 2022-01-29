@@ -15,7 +15,7 @@ public class HealthRecordController : ControllerBase
         _healthRecordService = healthRecordService;
     }
     
-    [HttpGet("{code}")]   
+    [HttpGet("{code}")]
     public IActionResult RecordsByPatientCode(string code)
     {
         var result = _healthRecordService.GetAllByPatientCode(code)
@@ -25,7 +25,13 @@ public class HealthRecordController : ControllerBase
                 Title = record.Title,
                 Doctor = record.Doctor,
                 Report = record.Report,
-                diagnosis = record.diagnosis,
+                Diagnosis = record.Diagnosis
+                    .Select(ad => new AssignedDiagnosisDto()
+                        {
+                            Diagnosis = ad.Diagnosis, 
+                            Localization = ad.Localization
+                        }
+                    ).ToList(),
                 PatientCode = record.Patient.Code
             })
             .ToList();
@@ -34,8 +40,13 @@ public class HealthRecordController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult SaveNewRecord(HealthRecord record)
+    public IActionResult SaveNewRecord(HealthRecordDto record)
     {
-        return Accepted();
+        var result = _healthRecordService.Save(record);
+        if (result == null)
+        {
+            return NotFound();
+        }
+        return Accepted(result);
     }
 }
