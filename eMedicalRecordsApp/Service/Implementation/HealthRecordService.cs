@@ -30,27 +30,36 @@ public class HealthRecordService : IHealthRecordService
     {
         var doctor = _systemContext.Doctors.FirstOrDefault(d => record.Doctor.PersonalNumber.Equals(d.PersonalNumber));
         var patient = _systemContext.Patients.FirstOrDefault(p => record.PatientCode.Equals(p.Code));
-        record.Diagnosis.ForEach(ad =>
+        List<AssignedDiagnosis> newAd = null;
+
+        if (record.Diagnosis != null)
         {
-            ad.Diagnosis = _systemContext.Diagnosis.FirstOrDefault(d => ad.Diagnosis.Code.Equals(d.Code));
-        });
-
-        var nullDiagnosis = record.Diagnosis.FindAll(ad => ad.Diagnosis == null).ToList().Count;
-
-        if (patient == null || doctor == null || nullDiagnosis > 0)
-        {
-            //TODO: Log that cannot find one of the properties
-            return null!;
-        }
-
-        var newAd = record.Diagnosis
-            .Select(ad =>
-                new AssignedDiagnosis()
+            record.Diagnosis.ForEach(ad =>
+            {
+                ad.Diagnosis = _systemContext.Diagnosis.FirstOrDefault(d => ad.Diagnosis.Code.Equals(d.Code));
+            });
+            newAd = record.Diagnosis
+                .Select(ad =>
+                    new AssignedDiagnosis()
                     {
                         Diagnosis = ad.Diagnosis,
                         Localization = ad.Localization
                     })
-            .ToList();
+                .ToList();
+            
+            var nullDiagnosis = record.Diagnosis.FindAll(ad => ad.Diagnosis == null).ToList().Count;
+            
+            if (nullDiagnosis > 0)
+            {
+                //TODO: Log that cannot find one of the properties
+                return null!;
+            }
+        }
+        if (patient == null || doctor == null)
+        {
+            //TODO: Log that cannot find one of the properties
+            return null!;
+        }
 
         var newRecord = new HealthRecord
         {

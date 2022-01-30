@@ -11,7 +11,7 @@ public class HealthRecord
     public virtual Doctor Doctor { get; set; }
     public virtual Patient Patient { get; set; }
     public string Report { get; set; }
-    public virtual List<AssignedDiagnosis> Diagnosis { get; set; }
+    public virtual List<AssignedDiagnosis>? Diagnosis { get; set; }
 
     public HealthRecord()
     {

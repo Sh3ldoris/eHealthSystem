@@ -18,25 +18,8 @@ public class HealthRecordController : ControllerBase
     [HttpGet("{code}")]
     public IActionResult RecordsByPatientCode(string code)
     {
-        var result = _healthRecordService.GetAllByPatientCode(code)
-            .Select(record => new HealthRecordDto()
-            {
-                Date = record.Date,
-                Title = record.Title,
-                Doctor = record.Doctor,
-                Report = record.Report,
-                Diagnosis = record.Diagnosis
-                    .Select(ad => new AssignedDiagnosisDto()
-                        {
-                            Diagnosis = ad.Diagnosis, 
-                            Localization = ad.Localization
-                        }
-                    ).ToList(),
-                PatientCode = record.Patient.Code
-            })
-            .ToList();
-        
-        return Ok(result);
+        var result = _healthRecordService.GetAllByPatientCode(code);
+        return Ok(MappingUtils.MapRecordsToListDto(result));
     }
 
     [HttpPost]
@@ -47,6 +30,6 @@ public class HealthRecordController : ControllerBase
         {
             return NotFound();
         }
-        return Accepted(result);
+        return Accepted(MappingUtils.MapRecordToDto(result));
     }
 }
