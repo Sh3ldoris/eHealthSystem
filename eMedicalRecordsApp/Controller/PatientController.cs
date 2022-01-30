@@ -18,18 +18,8 @@ public class PatientController : ControllerBase
     [HttpGet]   
     public IActionResult AllPatients()
     {
-        var patients = _patientService.GetAll();
-        var result = patients.Select(patient => new PatientDto()
-            {
-                Code = patient.Code,
-                Insurance = patient.Insurance,
-                Person = patient.Person,
-                UrgentInfo = patient.UrgentInfo,
-                Doctor = patient.Doctor,
-                CanAccess = patient.CanAccess.Select(d => d.PersonalNumber).ToList()
-            })
-            .ToList();
-        return Ok(result);
+        var result = _patientService.GetAll();
+        return Ok(MappingUtils.MapPatientsToListDto(result));
     }
 
     [HttpGet("{code}")]
@@ -38,43 +28,37 @@ public class PatientController : ControllerBase
         var patient = _patientService.Get(code);
         if (patient != null)
         {
-            return Ok(new PatientDto()
-            {
-                Code = patient.Code,
-                Insurance = patient.Insurance,
-                Person = patient.Person,
-                UrgentInfo = patient.UrgentInfo,
-                Doctor = patient.Doctor,
-                Anamnesis = patient.Anamnesis,
-                CanAccess = patient.CanAccess.Select(d => d.PersonalNumber).ToList()
-            });   
+            return Ok(MappingUtils.MapPatientToDto(patient));   
         }
 
         return NotFound();
     }
 
-    [HttpPost("doctor")]
-    public IActionResult PatientByDoctor(Doctor doctor)
+    [HttpGet("doctor/{personalNumber}")]
+    public IActionResult PatientByDoctor(string personalNumber)
     {
-        return Ok(Enumerable.Empty<Patient>());
+        var result = _patientService.GetAllByDoctor(personalNumber);
+        return Ok(MappingUtils.MapPatientsToListDto(result));
     }
     
-    [HttpGet("filtered")]
+    [HttpPost("filtered")]
     public IActionResult PatientByFilter(PatientFilter filter)
     {
-        return Ok(Enumerable.Empty<Patient>());
+        var result = _patientService.GetAllFilter(filter);
+        return Ok(MappingUtils.MapPatientsToListDto(result));
     }
 
     [HttpPost]
     public IActionResult SavePatient(PatientDto patient)
     {
         var newPatient = _patientService.AddNew(patient);
-        return Accepted(newPatient);
+        return Accepted(MappingUtils.MapPatientToDto(newPatient));
     }
     
     [HttpPut]
     public IActionResult UpdatePatient(Patient patient)
     {
+        //TODO: Implement
         return Accepted();
     }
 }

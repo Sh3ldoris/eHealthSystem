@@ -7,10 +7,10 @@ public record PatientDto
     public Person Person { get; set; }
     public UrgentInfo? UrgentInfo { get; set; }
     public Anamnesis? Anamnesis { get; set; }
-    public Doctor? Doctor { get; set; }
+    public DoctorDto? Doctor { get; set; }
     public List<string> CanAccess { get; set; }
 
-    public PatientDto(string code, string insurance, Person person, UrgentInfo? urgentInfo, Anamnesis? anamnesis, Doctor? doctor, List<string> canAccess)
+    public PatientDto(string code, string insurance, Person person, UrgentInfo? urgentInfo, Anamnesis? anamnesis, DoctorDto? doctor, List<string> canAccess)
     {
         Code = code;
         Insurance = insurance;

@@ -23,19 +23,37 @@ public class PatientService : IPatientService
         return _systemContext.Patients.FirstOrDefault(p => patientCode.Equals(p.Code));
     }
 
-    public IEnumerable<Patient> GetAllWithUrgentInfoByDoctor(Doctor doctor)
+    public IEnumerable<Patient> GetAllByDoctor(string doctorNumber)
     {
-        throw new NotImplementedException();
+        var doctor = _systemContext.Doctors
+            .FirstOrDefault(d => doctorNumber.Equals(d.PersonalNumber));
+        if (doctor == null)
+        {
+            //TODO: Log that cannot find doctor by given personal number
+            return Enumerable.Empty<Patient>();
+        }
+
+        return _systemContext.Patients
+            .Where(p => p.CanAccess.FirstOrDefault(d => doctor.PersonalNumber.Equals(d.PersonalNumber)) != null);
     }
 
-    public IEnumerable<Patient> GetAllWithUrgentInfoByFilter(PatientFilter filter)
+    public IEnumerable<Patient> GetAllFilter(PatientFilter filter)
     {
-        throw new NotImplementedException();
+        return _systemContext.Patients
+            .Where(p =>
+                p.Person.BirthNumber.ToLower().Contains(filter.BirthNumber.ToLower()) &&
+                p.Person.FirstName.ToLower().Contains(filter.Name.ToLower()) &&
+                p.Person.LastName.ToLower().Contains(filter.LastName.ToLower()) &&
+                p.Person.Address.ToLower().Contains(filter.Address.ToLower())
+            );
     }
 
     public Patient AddNew(PatientDto patient)
     {
             var newPatient = new Patient();
+            var patientDoctor = patient.Doctor != null ?
+                _systemContext.Doctors.FirstOrDefault(d => patient.Doctor.PersonalNumber.Equals(d.PersonalNumber)) 
+                : null;
             var canAccessDoctors = _systemContext.Doctors
                 .Where(doctor => patient.CanAccess.Contains(doctor.PersonalNumber))
                 .ToList();
@@ -45,15 +63,8 @@ public class PatientService : IPatientService
             newPatient.Insurance = patient.Insurance;
             newPatient.Person = patient.Person;
             newPatient.UrgentInfo = patient.UrgentInfo;
-            newPatient.Doctor = patient.Doctor;
-            if (patient.Anamnesis == null)
-            {
-                newPatient.Anamnesis = CreateBlankAnamnesis();
-            }
-            else
-            {
-                newPatient.Anamnesis = patient.Anamnesis;
-            }
+            newPatient.Doctor = patientDoctor;
+            newPatient.Anamnesis = patient.Anamnesis ?? CreateBlankAnamnesis();
 
             _systemContext.Patients.Add(newPatient);
             _systemContext.SaveChanges();

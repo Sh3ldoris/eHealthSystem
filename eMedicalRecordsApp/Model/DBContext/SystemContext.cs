@@ -25,6 +25,14 @@ public class SystemContext: DbContext
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new PatientConfig());
+        modelBuilder.Entity<Patient>()
+            .HasMany<Doctor>(d => d.CanAccess)
+            .WithMany(p => p.PatientsCanAccess)
+            .UsingEntity(t => t.ToTable("CanAccess"));
+
+        modelBuilder.Entity<Patient>()
+            .HasOne<Doctor>(p => p.Doctor)
+            .WithMany(d => d.Patients);
     }
     
     

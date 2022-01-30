@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace eMedicalRecordsApp.Model;
 
@@ -12,6 +13,8 @@ public class Patient
     public virtual Person Person { get; set; }
     public virtual UrgentInfo? UrgentInfo { get; set; }
     public virtual Anamnesis? Anamnesis { get; set; }
+    
+    [AllowNull]
     public virtual Doctor? Doctor { get; set; }
     public virtual List<Doctor> CanAccess { get; set; }
 

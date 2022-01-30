@@ -7,8 +7,8 @@ public interface IPatientService
 {
     IEnumerable<Patient> GetAll();
     Patient Get(string patientCode);
-    IEnumerable<Patient> GetAllWithUrgentInfoByDoctor(Doctor doctor);
-    IEnumerable<Patient> GetAllWithUrgentInfoByFilter(PatientFilter filter);
+    IEnumerable<Patient> GetAllByDoctor(string doctorNumber);
+    IEnumerable<Patient> GetAllFilter(PatientFilter filter);
     Patient AddNew(PatientDto patient);
     Patient UpdateExisting(Patient patient);
 }

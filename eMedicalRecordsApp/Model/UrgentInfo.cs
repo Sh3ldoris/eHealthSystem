@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace eMedicalRecordsApp.Model;
 
@@ -11,6 +12,7 @@ public class UrgentInfo
     public string OrganDonation { get; set; }
     public long Height { get; set; }
     public long Weight { get; set; }
+    [AllowNull]
     public DateTime? Tetanus { get; set; }
     public string Transplantation { get; set; }
     public string BloodGroup { get; set; }
