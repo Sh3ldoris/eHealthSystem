@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IPatientService>(new PatientService());
 builder.Services.AddSingleton<IHealthRecordService>(new HealthRecordService());
 builder.Services.AddSingleton<IDiagnosisService>(new DiagnosisService());
+builder.Services.AddSingleton<IDoctorService>(new DoctorService());
 
 var app = builder.Build();
 
