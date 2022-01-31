@@ -56,9 +56,9 @@ public class PatientController : ControllerBase
     }
     
     [HttpPut]
-    public IActionResult UpdatePatient(Patient patient)
+    public IActionResult UpdatePatient(PatientDto patient)
     {
-        //TODO: Implement
-        return Accepted();
+        var updatedPatient = _patientService.UpdateExisting(patient);
+        return Accepted(MappingUtils.MapPatientToDto(updatedPatient));
     }
 }

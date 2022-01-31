@@ -10,5 +10,5 @@ public interface IPatientService
     IEnumerable<Patient> GetAllByDoctor(string doctorNumber);
     IEnumerable<Patient> GetAllFilter(PatientFilter filter);
     Patient AddNew(PatientDto patient);
-    Patient UpdateExisting(Patient patient);
+    Patient UpdateExisting(PatientDto patient);
 }

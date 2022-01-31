@@ -71,9 +71,38 @@ public class PatientService : IPatientService
             return newPatient;
     }
 
-    public Patient UpdateExisting(Patient patient)
+    public Patient UpdateExisting(PatientDto patient)
     {
-        throw new NotImplementedException();
+        var patientDoctor = patient.Doctor != null ?
+            _systemContext.Doctors.FirstOrDefault(d => patient.Doctor.PersonalNumber.Equals(d.PersonalNumber)) 
+            : null;
+        var canAccessDoctors = _systemContext.Doctors
+            .Where(doctor => patient.CanAccess.Contains(doctor.PersonalNumber))
+            .ToList();
+        var patientPerson =
+            _systemContext.Persons.FirstOrDefault(p => patient.Person.BirthNumber.Equals(p.BirthNumber));
+        var updatingPatient = _systemContext.Patients.FirstOrDefault(p => patient.Code.Equals(p.Code));
+
+        if (updatingPatient == null || patientPerson == null)
+        {
+            //TODO: Cannot find patient to update
+            return null;
+        }
+        
+        //Can update person too (Some fields only)!
+        patientPerson.Occupation = patient.Person.Occupation;
+        patientPerson.FamilyState = patient.Person.FamilyState;
+
+        updatingPatient.Code = patient.Code;
+        updatingPatient.Insurance = patient.Insurance;
+        updatingPatient.Person = patientPerson;
+        updatingPatient.UrgentInfo = patient.UrgentInfo;
+        updatingPatient.Anamnesis = patient.Anamnesis;
+        updatingPatient.Doctor = patientDoctor;
+        updatingPatient.CanAccess = canAccessDoctors;
+
+        _systemContext.SaveChanges();
+        return updatingPatient;
     }
 
     private Anamnesis CreateBlankAnamnesis()

@@ -20,6 +20,7 @@ public static class MappingUtils
             Insurance = patient.Insurance,
             Person = patient.Person,
             UrgentInfo = patient.UrgentInfo,
+            Anamnesis = patient.Anamnesis,
             Doctor = patient.Doctor != null ? MapDoctorToDto(patient.Doctor) : null,
             CanAccess = patient.CanAccess.Select(d => d.PersonalNumber).ToList()
         };
