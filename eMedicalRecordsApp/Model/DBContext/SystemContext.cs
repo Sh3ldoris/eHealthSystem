@@ -12,6 +12,7 @@ public class SystemContext: DbContext
     public DbSet<HealthRecord> HealthRecords { get; set; }
     public DbSet<Diagnosis> Diagnosis { get; set; }
     public DbSet<AssignedDiagnosis> AssignedDiagnoses { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

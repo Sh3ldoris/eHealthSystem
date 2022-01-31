@@ -73,4 +73,9 @@ public static class MappingUtils
             Localization = diagnosis.Localization
         };
     }
+
+    public static UserDto MapUserToDto(User user)
+    {
+        return new UserDto(user.Code, MapDoctorToDto(user.UserDoctor));
+    }
 }
