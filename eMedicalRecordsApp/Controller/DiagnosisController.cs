@@ -1,10 +1,10 @@
-using eMedicalRecordsApp.Model;
+using eMedicalRecordsApp.Security;
 using eMedicalRecordsApp.Service;
-using eMedicalRecordsApp.Service.Implementation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMedicalRecordsApp.Controller;
 
+[CustomAuth]
 [ApiController]
 [Route("diagnosis")]
 public class DiagnosisController : ControllerBase

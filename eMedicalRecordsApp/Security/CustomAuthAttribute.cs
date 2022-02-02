@@ -7,8 +7,8 @@ public class CustomAuthAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var user = (bool)context.HttpContext.Items["Authorized"]!;
-        if (!user)
+        var authorized = (bool)context.HttpContext.Items["Authorized"]!;
+        if (!authorized)
         {
             // not logged in
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };

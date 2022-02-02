@@ -1,9 +1,11 @@
 using eMedicalRecordsApp.Model;
 using eMedicalRecordsApp.Model.DBContext;
+using eMedicalRecordsApp.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMedicalRecordsApp.Controller;
 
+[CustomAuth]
 [ApiController]
 [Route("db/init")]
 public class DbInitController : ControllerBase

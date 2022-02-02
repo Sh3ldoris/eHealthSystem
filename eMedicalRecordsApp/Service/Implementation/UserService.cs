@@ -14,6 +14,6 @@ public class UserService : IUserService
     
     public User Get(string doctorPersonalNumber)
     {
-        return _systemContext.Users.FirstOrDefault(p => doctorPersonalNumber.Equals(p.Code))!;
+        return _systemContext.Users.FirstOrDefault(u => doctorPersonalNumber.Equals(u.UserDoctor.PersonalNumber))!;
     }
 }
