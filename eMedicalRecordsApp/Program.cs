@@ -35,6 +35,7 @@ builder.Services.AddSingleton<IPatientService>(new PatientService());
 builder.Services.AddSingleton<IHealthRecordService>(new HealthRecordService());
 builder.Services.AddSingleton<IDiagnosisService>(new DiagnosisService());
 builder.Services.AddSingleton<IDoctorService>(new DoctorService());
+builder.Services.AddSingleton<IUserService>(new UserService());
 
 
 builder.Services.AddControllers();
