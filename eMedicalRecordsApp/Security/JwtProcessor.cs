@@ -8,39 +8,51 @@ namespace eMedicalRecordsApp.Security;
 public class JwtProcessor
 {
     private readonly RequestDelegate _next;
+    private readonly JwtSettings _jwtSettings;
 
-    public JwtProcessor(RequestDelegate next)
+    public JwtProcessor(RequestDelegate next, IOptions<JwtSettings> jwtSettings)
     {
         _next = next;
+        _jwtSettings = jwtSettings.Value;
     }
     
     public async Task Invoke(HttpContext context)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-        if (token != null)
+        if (token == null || ValidateToken(token) == null)
         {
-            Console.WriteLine(token);
+            context.Items["Authorized"] = false;
+        }
+        else
+        {
+            context.Items["Authorized"] = true;
+        }
         
+        await _next(context);
+    }
+
+    private JwtSecurityToken ValidateToken(string token)
+    {
+        try
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes("this is my custom Secret key for authnetication");
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
             tokenHandler.ValidateToken(token, new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
-        
-            context.Items["Authorized"] = true;
-
-            var jwtToken = (JwtSecurityToken)validatedToken;
-        
-            Console.WriteLine(jwtToken);
+            
+            return (JwtSecurityToken)validatedToken;
         }
-        
-        await _next(context);
+        catch
+        {
+            //In a case of error while validating (Unsuccessful validation)
+            return null!;
+        }
     }
 }

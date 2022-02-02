@@ -1,14 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using eMedicalRecordsApp.Model.TransferObjects;
+using eMedicalRecordsApp.Security;
 using eMedicalRecordsApp.Service;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
 
 namespace eMedicalRecordsApp.Controller;
 
@@ -16,46 +10,27 @@ namespace eMedicalRecordsApp.Controller;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-    /*private IUserService _userService;
+    private readonly IUserService _userService;
+    private readonly JwtSettings _jwtSettings;
 
-    public AuthController(IUserService userService)
+    public AuthController(IUserService userService, IOptions<JwtSettings> jwtSettings)
     {
         _userService = userService;
+        _jwtSettings = jwtSettings.Value;
     }
-    */
     
     [HttpPost]
     public IActionResult LogIn(LoginRequest login)
     {
-        IdentityUser identityUser;
+        var user = _userService.Get(login.PersonalNumber);
 
-        if (!ModelState.IsValid)
+        if (user == null || !user.Password.Equals(login.Password))
         {
-            return new BadRequestObjectResult(new { Message = "Login failed" });
+            return BadRequest(new { message = "Incorrect login" });
         }
 
-        var token = GenerateToken(login.PersonalNumber);
+        var token = JwtUtils.GenerateJwtToken(user, _jwtSettings.Secret);
         return Ok(new { Token = token, Message = "Success" });
     }
     
-    private object GenerateToken(string name)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is my custom Secret key for authnetication"));
-
-        var signingCredentials = new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256Signature);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim(ClaimTypes.Name, name)
-            }),
-
-            Expires = DateTime.UtcNow.AddSeconds(10000),
-            SigningCredentials = signingCredentials
-        };
-
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
 }
