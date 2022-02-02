@@ -1,8 +1,7 @@
-using eMedicalRecordsApp.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace eMedicalRecordsApp.Configuration;
+namespace eMedicalRecordsApp.Model.DBContext.Configuration;
 
 public class PatientConfig : IEntityTypeConfiguration<Patient>
 {

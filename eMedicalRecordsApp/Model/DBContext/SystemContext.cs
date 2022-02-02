@@ -1,4 +1,4 @@
-using eMedicalRecordsApp.Configuration;
+using eMedicalRecordsApp.Model.DBContext.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace eMedicalRecordsApp.Model.DBContext;

@@ -92,4 +92,17 @@ public class DbInitController : ControllerBase
         }
         return Ok();
     }
+
+    [HttpGet("user")] 
+    public IActionResult InitUsers()
+    {
+        using (var ctx = new SystemContext())
+        {
+            var data = ctx.Doctors.Select(d => new User(){ Password = "Pass123", UserDoctor = d});
+            ctx.Users.AddRange(data);
+            ctx.SaveChanges();
+        }
+        
+        return Ok();
+    }
 }

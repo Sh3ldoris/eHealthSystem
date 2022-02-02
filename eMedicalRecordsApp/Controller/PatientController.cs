@@ -1,5 +1,6 @@
 using eMedicalRecordsApp.Model;
 using eMedicalRecordsApp.Model.TransferObjects;
+using eMedicalRecordsApp.Security;
 using eMedicalRecordsApp.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ public class PatientController : ControllerBase
         _patientService = patientService;
     }
 
+    [CustomAuth]
     [HttpGet]   
     public IActionResult AllPatients()
     {
