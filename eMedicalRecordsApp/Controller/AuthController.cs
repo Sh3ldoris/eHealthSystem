@@ -26,11 +26,11 @@ public class AuthController : ControllerBase
 
         if (user == null || !user.Password.Equals(login.Password))
         {
-            return BadRequest(new { message = "Incorrect login" });
+            return BadRequest(new { Token = "null", PersonalNumber = "null" });
         }
 
         var token = JwtUtils.GenerateJwtToken(user, _jwtSettings.Secret);
-        return Ok(new { Token = token, Message = "Success" });
+        return Ok(new { Token = token, PersonalNumber = user.UserDoctor.PersonalNumber });
     }
     
 }
