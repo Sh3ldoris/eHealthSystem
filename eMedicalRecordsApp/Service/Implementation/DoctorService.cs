@@ -14,6 +14,6 @@ public class DoctorService : IDoctorService
     
     public Doctor Get(string personalNumber)
     {
-        return _systemContext.Doctors.FirstOrDefault(d => personalNumber.Equals(d.PersonalNumber));
+        return _systemContext.Doctors.FirstOrDefault(d => personalNumber.Equals(d.PersonalNumber))!;
     }
 }

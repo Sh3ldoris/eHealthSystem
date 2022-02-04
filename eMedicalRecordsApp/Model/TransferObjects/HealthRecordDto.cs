@@ -7,9 +7,10 @@ public record HealthRecordDto
     public virtual DoctorDto Doctor { get; set; }
     public string PatientCode { get; set; }
     public string Report { get; set; }
-    public virtual List<AssignedDiagnosisDto>? Diagnosis { get; set; }
+    public List<AssignedDiagnosisDto>? Diagnosis { get; set; }
 
-    public HealthRecordDto(DateTime date, string title, DoctorDto doctor, string patientCode, string report, List<AssignedDiagnosisDto> diagnosis)
+
+    public HealthRecordDto(DateTime date, string title, DoctorDto doctor, string patientCode, string report, List<AssignedDiagnosisDto>? diagnosis)
     {
         Date = date;
         Title = title;
@@ -17,9 +18,5 @@ public record HealthRecordDto
         PatientCode = patientCode;
         Report = report;
         Diagnosis = diagnosis;
-    }
-
-    public HealthRecordDto()
-    {
     }
 }

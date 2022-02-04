@@ -14,28 +14,25 @@ public static class MappingUtils
 
     public static PatientDto MapPatientToDto(Patient patient)
     {
-        return new PatientDto()
-        {
-            Code = patient.Code,
-            Insurance = patient.Insurance,
-            Person = patient.Person,
-            UrgentInfo = patient.UrgentInfo,
-            Anamnesis = patient.Anamnesis,
-            Doctor = patient.Doctor != null ? MapDoctorToDto(patient.Doctor) : null,
-            CanAccess = patient.CanAccess.Select(d => d.PersonalNumber).ToList()
-        };
+        return new PatientDto(
+            patient.Code, 
+            patient.Insurance, 
+            patient.Person, 
+            patient.UrgentInfo, 
+            patient.Anamnesis,
+            patient.Doctor != null ? MapDoctorToDto(patient.Doctor) : null,
+            patient.CanAccess?.Select(d => d.PersonalNumber).ToList()
+            );
     }
 
     public static DoctorDto MapDoctorToDto(Doctor doctor)
     {
-        return new DoctorDto()
-        {
-            PersonalNumber = doctor.PersonalNumber,
-            Password = doctor.Password,
-            Person = doctor.Person,
-            Specification = doctor.Specification,
-            Ambulance = doctor.Ambulance
-        };
+        return new DoctorDto(
+            doctor.PersonalNumber,
+            doctor.Person,
+            doctor.Specification,
+            doctor.Ambulance
+        );
     }
 
     public static List<HealthRecordDto> MapRecordsToListDto(IEnumerable<HealthRecord> records)
@@ -47,15 +44,14 @@ public static class MappingUtils
 
     public static HealthRecordDto MapRecordToDto(HealthRecord record)
     {
-        return new HealthRecordDto()
-        {
-            Date = record.Date,
-            Diagnosis = record.Diagnosis != null ? MapAssignedDiagnosesToListDto(record.Diagnosis) : null,
-            Doctor = MapDoctorToDto(record.Doctor),
-            PatientCode = record.Patient.Code,
-            Report = record.Report,
-            Title = record.Title
-        };
+        return new HealthRecordDto(
+                record.Date,
+                record.Title,
+                MapDoctorToDto(record.Doctor),
+                record.Patient.Code,
+                record.Report,
+                record.Diagnosis != null ? MapAssignedDiagnosesToListDto(record.Diagnosis) : null
+        );
     }
     
     public static List<AssignedDiagnosisDto> MapAssignedDiagnosesToListDto(IEnumerable<AssignedDiagnosis> diagnoses)
@@ -67,11 +63,10 @@ public static class MappingUtils
 
     public static AssignedDiagnosisDto MapAssignedDiagnosisToDto(AssignedDiagnosis diagnosis)
     {
-        return new AssignedDiagnosisDto()
-        {
-            Diagnosis = diagnosis.Diagnosis,
-            Localization = diagnosis.Localization
-        };
+        return new AssignedDiagnosisDto(
+                diagnosis.Localization,
+                diagnosis.Diagnosis
+            );
     }
 
     public static UserDto MapUserToDto(User user)

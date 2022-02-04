@@ -20,7 +20,7 @@ public class PatientService : IPatientService
 
     public Patient Get(string patientCode)
     {
-        return _systemContext.Patients.FirstOrDefault(p => patientCode.Equals(p.Code));
+        return _systemContext.Patients.FirstOrDefault(p => patientCode.Equals(p.Code))!;
     }
 
     public IEnumerable<Patient> GetAllByDoctor(string doctorNumber)
@@ -34,7 +34,9 @@ public class PatientService : IPatientService
         }
 
         return _systemContext.Patients
-            .Where(p => p.CanAccess.FirstOrDefault(d => doctor.PersonalNumber.Equals(d.PersonalNumber)) != null);
+            .Where(p =>
+                p.CanAccess.FirstOrDefault(d => doctor.PersonalNumber.Equals(d.PersonalNumber)) != null
+            );
     }
 
     public IEnumerable<Patient> GetAllFilter(PatientFilter filter)
@@ -50,21 +52,22 @@ public class PatientService : IPatientService
 
     public Patient AddNew(PatientDto patient)
     {
-            var newPatient = new Patient();
-            var patientDoctor = patient.Doctor != null ?
+        var patientDoctor = patient.Doctor != null ?
                 _systemContext.Doctors.FirstOrDefault(d => patient.Doctor.PersonalNumber.Equals(d.PersonalNumber)) 
                 : null;
             var canAccessDoctors = _systemContext.Doctors
-                .Where(doctor => patient.CanAccess.Contains(doctor.PersonalNumber))
+                .Where(doctor => patient.CanAccess != null && patient.CanAccess.Contains(doctor.PersonalNumber))
                 .ToList();
             
-            newPatient.CanAccess = canAccessDoctors;
-            newPatient.Code = patient.Code;
-            newPatient.Insurance = patient.Insurance;
-            newPatient.Person = patient.Person;
-            newPatient.UrgentInfo = patient.UrgentInfo;
-            newPatient.Doctor = patientDoctor;
-            newPatient.Anamnesis = patient.Anamnesis ?? CreateBlankAnamnesis();
+            var newPatient = new Patient(
+                    patient.Code,
+                    patient.Insurance,
+                    patient.Person,
+                    patient.UrgentInfo,
+                    patient.Anamnesis ?? CreateBlankAnamnesis(),
+                    patientDoctor,
+                    canAccessDoctors
+                );
 
             _systemContext.Patients.Add(newPatient);
             _systemContext.SaveChanges();
@@ -77,7 +80,7 @@ public class PatientService : IPatientService
             _systemContext.Doctors.FirstOrDefault(d => patient.Doctor.PersonalNumber.Equals(d.PersonalNumber)) 
             : null;
         var canAccessDoctors = _systemContext.Doctors
-            .Where(doctor => patient.CanAccess.Contains(doctor.PersonalNumber))
+            .Where(doctor => patient.CanAccess != null && patient.CanAccess.Contains(doctor.PersonalNumber))
             .ToList();
         var patientPerson =
             _systemContext.Persons.FirstOrDefault(p => patient.Person.BirthNumber.Equals(p.BirthNumber));
@@ -86,7 +89,7 @@ public class PatientService : IPatientService
         if (updatingPatient == null || patientPerson == null)
         {
             //TODO: Cannot find patient to update
-            return null;
+            return null!;
         }
         
         //Can update person too (Some fields only)!

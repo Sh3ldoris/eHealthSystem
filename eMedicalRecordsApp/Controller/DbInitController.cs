@@ -1,11 +1,9 @@
 using eMedicalRecordsApp.Model;
 using eMedicalRecordsApp.Model.DBContext;
-using eMedicalRecordsApp.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMedicalRecordsApp.Controller;
 
-[CustomAuth]
 [ApiController]
 [Route("db/init")]
 public class DbInitController : ControllerBase
@@ -25,57 +23,47 @@ public class DbInitController : ControllerBase
     {
         using (var ctx = new SystemContext())
         {
-            var person1 = new Person()
-            {
-                FirstName = "MUDr. Vladimír",
-                LastName = "Kusko",
-                Gender = "",
-                BirthNumber = "doctor/1",
-                Address = "",
-                Phone = "",
-                FamilyState = "",
-                Occupation = ""
-            };
+            var person1 = new Person(
+                "doctor/1",
+                "MUDr. Vladimír",
+                "Kucko",
+                "MALE",
+                new DateTime(1998, 10, 10),
+                "Predajna",
+                "112",
+                "Slovbodny",
+                "Pracant"
+                );
             
-            var person2 = new Person()
-            {
-                FirstName = "MUDr. Elena",
-                LastName = "Auxtova",
-                Gender = "",
-                BirthNumber = "doctor/2",
-                Address = "",
-                Phone = "",
-                FamilyState = "",
-                Occupation = ""
-            };
-            
-            var doctor1 = new Doctor()
-            {
-                PersonalNumber = "5ZY0123",
-                Password = "admin123",
-                Person = person1,
-                Specification = "oftalmológ",
-                Ambulance = new Ambulance()
-                {
-                    Id = 1,
-                    Address = "ul. V. Spanyola 43, Žilina 010 01",
-                    Name = "O Č N Á   A M B U L A N C I A"
-                }
-            };
-            
-            var doctor2 = new Doctor()
-            {
-                PersonalNumber = "5ZY0153",
-                Password = "lekar",
-                Person = person2,
-                Specification = "všeobecná starostlivosť o deti a dorast",
-                Ambulance = new Ambulance()
-                {
-                    Id = 2,
-                    Address = "Štúrova  481/5 97646  Valaská",
-                    Name = "Všeobecná ambulancia pre deti a dorast, Valaská"
-                }
-            };
+            var person2 = new Person(
+                "doctor/2",
+                "MUDr. Elena",
+                "Auxtova",
+                "FEMALE",
+                new DateTime(1998, 10, 10),
+                "Predajna",
+                "112",
+                "Slovbodny",
+                "Pracant"
+            );
+
+            var doctor1 = new Doctor(
+                "5ZY0123",
+                person1,
+                "oftalmológ",
+                new Ambulance("O Č N Á   A M B U L A N C I A", "ul. V. Spanyola 43, Žilina 010 01"),
+                null,
+                null
+                );
+
+            var doctor2 = new Doctor(
+                "5ZY0153",
+                person2,
+                "všeobecná starostlivosť o deti a dorast",
+                new Ambulance("Štúrova  481/5 97646  Valaská", "Všeobecná ambulancia pre deti a dorast, Valaská"),
+                null,
+                null
+            );
 
             List<Doctor> doctors = new List<Doctor>() {doctor1, doctor2};
             ctx.Doctors.AddRange(doctors);
@@ -100,7 +88,7 @@ public class DbInitController : ControllerBase
     {
         using (var ctx = new SystemContext())
         {
-            var data = ctx.Doctors.Select(d => new User(){ Password = "Pass123", UserDoctor = d});
+            var data = ctx.Doctors.Select(d => new User("Pass123", d));
             ctx.Users.AddRange(data);
             ctx.SaveChanges();
         }

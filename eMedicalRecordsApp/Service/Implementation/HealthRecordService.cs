@@ -30,21 +30,21 @@ public class HealthRecordService : IHealthRecordService
     {
         var doctor = _systemContext.Doctors.FirstOrDefault(d => record.Doctor.PersonalNumber.Equals(d.PersonalNumber));
         var patient = _systemContext.Patients.FirstOrDefault(p => record.PatientCode.Equals(p.Code));
-        List<AssignedDiagnosis> newAd = null;
+        var newAd = new List<AssignedDiagnosis>();
 
         if (record.Diagnosis != null)
         {
             record.Diagnosis.ForEach(ad =>
             {
-                ad.Diagnosis = _systemContext.Diagnosis.FirstOrDefault(d => ad.Diagnosis.Code.Equals(d.Code));
+                ad.Diagnosis = _systemContext.Diagnosis.FirstOrDefault(d => ad.Diagnosis.Code.Equals(d.Code))!;
             });
             newAd = record.Diagnosis
                 .Select(ad =>
-                    new AssignedDiagnosis()
-                    {
-                        Diagnosis = ad.Diagnosis,
-                        Localization = ad.Localization
-                    })
+                    new AssignedDiagnosis(
+                        ad.Localization, 
+                        ad.Diagnosis
+                        )
+                )
                 .ToList();
             
             var nullDiagnosis = record.Diagnosis.FindAll(ad => ad.Diagnosis == null).ToList().Count;
@@ -61,16 +61,15 @@ public class HealthRecordService : IHealthRecordService
             return null!;
         }
 
-        var newRecord = new HealthRecord
-        {
-            Date = record.Date,
-            Title = record.Title,
-            Report = record.Report,
-            Diagnosis = newAd,
-            Doctor = doctor,
-            Patient = patient,
-            Id = Guid.NewGuid().ToString()
-        };
+        var newRecord = new HealthRecord(
+            Guid.NewGuid().ToString(),
+            record.Date,
+            record.Title,
+            doctor,
+            patient,
+            record.Report,
+            newAd
+            );
 
         _systemContext.HealthRecords.Add(newRecord);
         _systemContext.SaveChanges();

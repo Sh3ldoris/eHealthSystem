@@ -1,4 +1,3 @@
-using eMedicalRecordsApp.Model;
 using eMedicalRecordsApp.Model.TransferObjects;
 using eMedicalRecordsApp.Security;
 using eMedicalRecordsApp.Service;

@@ -7,7 +7,19 @@ public class PatientFilter
     public string Name { get; set; }
     public string LastName { get; set; }
 
+    public PatientFilter(string address, string birthNumber, string name, string lastName)
+    {
+        Address = address;
+        BirthNumber = birthNumber;
+        Name = name;
+        LastName = lastName;
+    }
+
     public PatientFilter()
     {
+        Address = "";
+        BirthNumber = "";
+        Name = "";
+        LastName = "";
     }
 }
