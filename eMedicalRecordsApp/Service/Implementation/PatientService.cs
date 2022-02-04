@@ -6,10 +6,12 @@ namespace eMedicalRecordsApp.Service.Implementation;
 
 public class PatientService : IPatientService
 {
+    private readonly ILogger _logger;
     private readonly SystemContext _systemContext;
 
-    public PatientService()
+    public PatientService(ILogger<PatientService> logger)
     {
+        _logger = logger;
         _systemContext = new SystemContext();
     }
 
@@ -29,7 +31,7 @@ public class PatientService : IPatientService
             .FirstOrDefault(d => doctorNumber.Equals(d.PersonalNumber));
         if (doctor == null)
         {
-            //TODO: Log that cannot find doctor by given personal number
+            _logger.LogWarning($"Cannot find doctor by given personal number -> {doctorNumber}");
             return Enumerable.Empty<Patient>();
         }
 
@@ -88,7 +90,7 @@ public class PatientService : IPatientService
 
         if (updatingPatient == null || patientPerson == null)
         {
-            //TODO: Cannot find patient to update
+            _logger.LogWarning("Cannot find patient to update");
             return null!;
         }
         

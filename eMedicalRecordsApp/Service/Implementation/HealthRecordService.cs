@@ -6,10 +6,12 @@ namespace eMedicalRecordsApp.Service.Implementation;
 
 public class HealthRecordService : IHealthRecordService
 {
+    private readonly ILogger _logger;
     private readonly SystemContext _systemContext;
 
-    public HealthRecordService()
+    public HealthRecordService(ILogger<HealthRecordService> logger)
     {
+        _logger = logger;
         _systemContext = new SystemContext();
     }
 
@@ -18,7 +20,7 @@ public class HealthRecordService : IHealthRecordService
         var patient = _systemContext.Patients.FirstOrDefault(p => code.Equals(p.Code));
         if (patient == null)
         {
-            //TODO: Log that cannot find patient by given code
+            _logger.LogWarning($"Cannot find patient by given code -> {code}");
             return Enumerable.Empty<HealthRecord>();
         }
         
@@ -51,13 +53,13 @@ public class HealthRecordService : IHealthRecordService
             
             if (nullDiagnosis > 0)
             {
-                //TODO: Log that cannot find one of the properties
+                _logger.LogWarning("Cannot find diagnosis");
                 return null!;
             }
         }
         if (patient == null || doctor == null)
         {
-            //TODO: Log that cannot find one of the properties
+            _logger.LogWarning("Cannot find patient or doctor");
             return null!;
         }
 

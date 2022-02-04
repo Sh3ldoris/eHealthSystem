@@ -7,6 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddAuthentication(options =>
 {
@@ -31,11 +34,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Add services to the container.
-builder.Services.AddSingleton<IPatientService>(new PatientService());
-builder.Services.AddSingleton<IHealthRecordService>(new HealthRecordService());
-builder.Services.AddSingleton<IDiagnosisService>(new DiagnosisService());
-builder.Services.AddSingleton<IDoctorService>(new DoctorService());
-builder.Services.AddSingleton<IUserService>(new UserService());
+builder.Services.AddSingleton<IPatientService, PatientService>();
+builder.Services.AddSingleton<IHealthRecordService, HealthRecordService>();
+builder.Services.AddSingleton<IDiagnosisService, DiagnosisService>();
+builder.Services.AddSingleton<IDoctorService, DoctorService>();
+builder.Services.AddSingleton<IUserService, UserService>();
 
 
 builder.Services.AddControllers();
