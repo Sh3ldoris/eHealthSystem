@@ -1,9 +1,6 @@
-using System.Text;
 using eMedicalRecordsApp.Security;
 using eMedicalRecordsApp.Service;
 using eMedicalRecordsApp.Service.Implementation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,27 +8,6 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
-{
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidIssuer = "Issuer",
-        ValidateAudience = true,
-        ValidAudience = "Audience",
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is my custom Secret key for authnetication")),
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
 
 // Add services to the container.
 builder.Services.AddSingleton<IPatientService, PatientService>();
