@@ -31,6 +31,6 @@ public class HealthRecordController : ControllerBase
         {
             return NotFound();
         }
-        return Accepted(MappingUtils.MapRecordToDto(result));
+        return Accepted(MappingUtils.MapRecordToDto(result.Result));
     }
 }

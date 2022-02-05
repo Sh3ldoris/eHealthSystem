@@ -52,7 +52,7 @@ public class PatientService : IPatientService
             );
     }
 
-    public Patient AddNew(PatientDto patient)
+    public async Task<Patient> AddNew(PatientDto patient)
     {
         var patientDoctor = patient.Doctor != null ?
                 _systemContext.Doctors.FirstOrDefault(d => patient.Doctor.PersonalNumber.Equals(d.PersonalNumber)) 
@@ -72,11 +72,11 @@ public class PatientService : IPatientService
                 );
 
             _systemContext.Patients.Add(newPatient);
-            _systemContext.SaveChanges();
+            await _systemContext.SaveChangesAsync();
             return newPatient;
     }
 
-    public Patient UpdateExisting(PatientDto patient)
+    public async Task<Patient> UpdateExisting(PatientDto patient)
     {
         var patientDoctor = patient.Doctor != null ?
             _systemContext.Doctors.FirstOrDefault(d => patient.Doctor.PersonalNumber.Equals(d.PersonalNumber)) 
@@ -106,7 +106,7 @@ public class PatientService : IPatientService
         updatingPatient.Doctor = patientDoctor;
         updatingPatient.CanAccess = canAccessDoctors;
 
-        _systemContext.SaveChanges();
+        await _systemContext.SaveChangesAsync();
         return updatingPatient;
     }
 

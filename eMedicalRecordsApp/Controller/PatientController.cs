@@ -54,13 +54,13 @@ public class PatientController : ControllerBase
     public IActionResult SavePatient(PatientDto patient)
     {
         var newPatient = _patientService.AddNew(patient);
-        return Accepted(MappingUtils.MapPatientToDto(newPatient));
+        return Accepted(MappingUtils.MapPatientToDto(newPatient.Result));
     }
     
     [HttpPut]
     public IActionResult UpdatePatient(PatientDto patient)
     {
         var updatedPatient = _patientService.UpdateExisting(patient);
-        return Accepted(MappingUtils.MapPatientToDto(updatedPatient));
+        return Accepted(MappingUtils.MapPatientToDto(updatedPatient.Result));
     }
 }

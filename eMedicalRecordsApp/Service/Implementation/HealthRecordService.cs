@@ -28,7 +28,7 @@ public class HealthRecordService : IHealthRecordService
             .Where(record => patient.Code.Equals(record.Patient.Code));
     }
 
-    public HealthRecord Save(HealthRecordDto record)
+    public async Task<HealthRecord> Save(HealthRecordDto record)
     {
         var doctor = _systemContext.Doctors.FirstOrDefault(d => record.Doctor.PersonalNumber.Equals(d.PersonalNumber));
         var patient = _systemContext.Patients.FirstOrDefault(p => record.PatientCode.Equals(p.Code));
@@ -74,7 +74,7 @@ public class HealthRecordService : IHealthRecordService
             );
 
         _systemContext.HealthRecords.Add(newRecord);
-        _systemContext.SaveChanges();
+        await _systemContext.SaveChangesAsync();
         
         return newRecord;
     }

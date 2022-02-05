@@ -6,5 +6,5 @@ namespace eMedicalRecordsApp.Service;
 public interface IHealthRecordService
 {
     IEnumerable<HealthRecord> GetAllByPatientCode(string code);
-    HealthRecord Save(HealthRecordDto record);
+    Task<HealthRecord> Save(HealthRecordDto record);
 }
