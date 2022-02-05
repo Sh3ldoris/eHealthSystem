@@ -9,5 +9,14 @@ public class PatientConfig : IEntityTypeConfiguration<Patient>
     {
         builder.OwnsOne(p => p.Anamnesis);
         builder.OwnsOne(p => p.UrgentInfo);
+        
+        builder
+            .HasMany<Doctor>(d => d.CanAccess)
+            .WithMany(p => p.PatientsCanAccess)
+            .UsingEntity(t => t.ToTable("CanAccess"));
+        
+        builder
+            .HasOne<Doctor>(p => p.Doctor)
+            .WithMany(d => d.Patients);
     }
 }
